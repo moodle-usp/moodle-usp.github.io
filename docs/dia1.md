@@ -9,11 +9,12 @@ nav_order: 2
 
 ## Considerações
 
-- Moodle histórico
+- Histórico Moodle (Modular Object-Oriented Dynamic Learning Environment) - 2001 - PHP 4
+- Outros Frameworks (drupal, laravel, symfony, zend etc)
 - Por que um plugin?
-- Tipos de plugin
-- Nosso exemplo: importação de cursos e alunos a partir de um arquvo csv, que pode ser adaptado para outros contextos.
-- Camadas moodle: apresentação, negócio e dados.
+- Tipos de plugin (atividade, blocos, local... +30)
+- Nosso exemplo: importação de cursos e alunos a partir de um arquivo csv, mas que pode ser adaptado para outros contextos (API, integração).
+- Camadas moodle: dados, apresentação e negócio. MVC (Model-View-Controller).
 
 ## Preparação do ambiente
 
