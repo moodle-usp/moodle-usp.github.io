@@ -29,8 +29,9 @@ create database moodle;
 Baixando o moodle:
 
 ```bash
-wget https://download.moodle.org/download.php/stable401/moodle-latest-401.tgz
-tar zxvf moodle-latest-401.tgz
+git clone https://github.com/fflch/moodle4_composer.git
+cd moodle4_composer
+composer install
 ```
 
 Entrar no moodle e seguir o procedimento de instalação:
@@ -51,12 +52,6 @@ cd importstuffs
 ```
 
 Arquivo com metadados, *version.php*:
-
-```php
-$plugin->component = 'block_importstuffs';
-$plugin->version = 2023011401;
-```
-Arquivo version.php
 
 ```php
 $plugin->component = 'block_importstuffs';
@@ -98,8 +93,14 @@ $string['pluginname'] = 'Importing courses and users';
 $string['pluginname'] = 'Importação de cursos e usuários';
 ```
 
-Neste ponto podemos ativar nosso plugin pela interface e adicionar o bloco ativando
-o modo de edição, painel e em adicionar bloco.
+Neste ponto podemos ativar nosso plugin pela interface ou com o comando:
+
+```bash
+php admin/cli/upgrade.php
+```
+
+
+Adicione o bloco ativando o modo de edição, painel (dashboard) e em adicionar bloco.
 
 Se houve algum erro, pode-se ativar opções de debug no *config.php*:
 
@@ -137,34 +138,7 @@ $url = new moodle_url('/blocks/importstuffs/view.php');
 $this->content->text .= html_writer::link($url, 'Upload stuffs');
 ```
 
-## Templates
 
-O sistema de template evita o código "macarrônico", *templates/view.mustache*:
-
-```php
-{% raw %}
-<div class="card">
-  <div class="card-header">
-    {{ title }}
-  </div>
-  <div class="card-body">
-    ainda nada
-  </div>
-</div>
-{% endraw %}
-```
-
-Podemos passar variáveis da view para o template:
-
-```php
-$data = [
-    'title' => 'Plugin de importação de coisas',
-];
-
-print $OUTPUT->header();
-echo $OUTPUT->render_from_template('block_importstuffs/view', $data);
-print $OUTPUT->footer()
-```
 
 
 
