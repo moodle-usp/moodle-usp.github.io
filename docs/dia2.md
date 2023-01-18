@@ -92,31 +92,6 @@ No mustache:
 {% raw %}{{{ uploadform }}}{% endraw %}
 ```
 
-Tratando os dados submetidos:
-
-```php
-$request = $uploadform->get_data();
-if (!empty($request) and !is_null($request))  {
-    $file = $uploadform->get_file_content('file');
-    print_r($request->description);
-    print_r($request->type);
-    print_r($file);
-    die();
-} else {
-    \core\notification::info('Nada submetido ainda');
-}
-```
-
-## Mensagem de alerta (Bootstrap)
-
-Podemos lançar uma mensagem de alerta usando a moodle:
-
-```php
-else {
-   \core\notification::error('Nada submetido ainda');
-}
-```
-
 ## Criação de tabela no banco de dados
 
 ```xml
@@ -129,7 +104,7 @@ else {
     <TABLE NAME="block_importstuffs" COMMENT="">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="type" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="file" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
@@ -147,3 +122,6 @@ Criando tabela:
 php admin/cli/uninstall_plugins.php --plugins=block_importstuffs --run
 php admin/cli/upgrade.php
 ```
+
+
+
