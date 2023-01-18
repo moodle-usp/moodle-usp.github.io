@@ -9,48 +9,104 @@ nav_order: 4
 
 ## Banco de dados
 
-## Configurações do Plugin
+<a href="/assets/cursos.csv">Arquivo csv com cursos. </a>
 
 
-Tratando os dados submetidos:
+Resgatando os dados submetidos na view.php:
 
 ```php
-$request = $uploadform->get_data();
-if (!empty($request) and !is_null($request))  {
-    $file = $uploadform->get_file_content('file');
-    print_r($request->description);
-    print_r($request->type);
-    print_r($file);
-    die();
-} else {
-    \core\notification::info('Nada submetido ainda');
+$data = [
+	'uploadform' => $uploadform->render(),
+	'records'    => array_values($DB->get_records('block_importstuffs'))
+];
+
+```
+
+No mustache apresentamos os dados existentes no banco de dados:
+
+```php
+{% raw %}<table class="table">
+
+    <tr>
+      <td> <b>Descrição do arquivo</b></td>
+      <td> <b>Tipo</b></td>
+    </tr>
+
+    {{#records}}
+      <tr>
+        <td> {{description}}</td>
+        <td>
+          {{#type}}
+              Users
+          {{/type}}
+
+          {{^type}}
+            Course
+          {{/type}}
+        </td>
+      </tr>
+    {{/records}}
+
+  </table>{% endraw %}
+```
+
+Criando uma nova página para criação dos cursos *createcourses.php*:
+
+```php
+require_once('../../config.php');
+global $DB;
+
+$url = new moodle_url("/blocks/importstuffs/createcourses.php");
+$PAGE->set_url($url);
+$PAGE->set_context(context_system::instance());
+
+$id = required_param('id', PARAM_INT);
+
+die('to aqui');
+```
+
+Criando um link para nova página no mustache:
+
+```html
+<a href="/blocks/importstuffs/createcourses.php/?id={{ id }}"> Importar no moodle </a>
+```
+
+Em *createcourses.php* verificando se registro existe:
+
+```php
+$record = $DB->get_record('block_importstuffs', ['id' => $id]);
+if(!$record) {
+    \core\notification::error('Registro não existe');
+    redirect($CFG->wwwroot . '/blocks/importstuffs/view.php');
 }
 ```
 
-## Mensagem de alerta (Bootstrap)
-
-Podemos lançar uma mensagem de alerta usando a moodle:
+Vamos escrever *createcourses.php* para contemplar a importação de cursos,
+por enquanto vamos ignorar importação de usuários:
 
 ```php
-else {
-   \core\notification::error('Nada submetido ainda');
+if($record->type == 1){
+    \core\notification::error('Sistema só permite importação de cursos');
+    redirect($CFG->wwwroot . '/blocks/importstuffs/view.php');
 }
 ```
 
+Em *createcourses.php* abrindo o arquivo csv:
 
-<!---
-Não sei se vamos abordar?
+```php
+echo "<pre>";
+$lines = explode(PHP_EOL,$record->file);
+foreach($lines as $line){
+    $course = str_getcsv($line);
+    print_r($course);
+}
+```
 
-- hooks em lib.php ?
-- redirect($CFG->wwwroot . '/blocks/importstuffs/view.php', message='redirecionado');
+Inialmente verificar se curso não está cadastrado:
 
-- Inserir no banco de dados:
-
-$row = new stdClass();
-$row->campo1 = 'abc';
-$row->campo2 = 'Maria';
-
-$DB->insert_record('blocks_importstuffs',$row);
-$DB->get_records('blocks_importstuffs');  array_values()
-
--->
+```php
+if($DB->get_record('course', ['shortname' => $course[0]])){
+    \core\notification::error($course[0] . ' já existe');
+    continue;
+}
+```

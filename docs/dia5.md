@@ -17,6 +17,15 @@ Evitando que os scripts php sejam rodados foram do ambiente mooodle:
 defined('MOODLE_INTERNAL') || die();
 ```
 
+<!---
+Não sei se vamos abordar?
+
+- hooks em lib.php ?
+
+
+-->
+## Configurações do Plugin
+
 
 
 

@@ -32,7 +32,7 @@ php admin/cli/purge_caches.php
 
 O sistema de template evita o código "macarrônico", *templates/view.mustache*:
 
-```php
+```html
 {% raw %}<div class="card">
   <div class="card-header">
     {{ title }}
@@ -92,7 +92,7 @@ No mustache:
 {% raw %}{{{ uploadform }}}{% endraw %}
 ```
 
-## Criação de tabela no banco de dados
+## Banco de dados
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -122,6 +122,34 @@ Criando tabela:
 php admin/cli/uninstall_plugins.php --plugins=block_importstuffs --run
 php admin/cli/upgrade.php
 ```
+
+Salvando os dados do formulário no banco de dados:
+
+```php
+global $DB;
+
+$request = $uploadform->get_data();
+if(!empty($request) and !is_null($request)){
+
+    $row = new stdClass();
+    $row->description =$request->description;
+    $row->type = $request->type;
+    $row->file = $uploadform->get_file_content('file');
+    $DB->insert_record('block_importstuffs',$row);
+    
+    \core\notification::success('Registrado com sucesso');
+}
+```
+
+## Mensagem de alerta (Bootstrap)
+
+Podemos lançar uma mensagem de alerta usando a moodle:
+
+```php
+# error, warning, info, success
+\core\notification::success('Registrado com sucesso');
+```
+
 
 
 
