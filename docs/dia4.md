@@ -61,7 +61,6 @@ require_once('../../config.php');
 require_once("$CFG->dirroot/user/lib.php");
 
 global $DB;
-
 $id = required_param('id', PARAM_INT);
 
 $record = $DB->get_record('block_importstuffs', ['id' => $id]);
@@ -69,7 +68,6 @@ if(empty($record)) {
     \core\notification::error('Registro não existe');
     redirect($CFG->wwwroot . '/blocks/importstuffs/view.php');
 }
-
 
 $lines = explode(PHP_EOL,$record->file);
 foreach($lines as $line){
@@ -79,4 +77,22 @@ foreach($lines as $line){
 
 }
 redirect($CFG->wwwroot . '/blocks/importstuffs/view.php');
+```
+
+Criando usuários no moodle:
+
+```php
+$newuser = new stdClass();
+$newuser->username = $user[1];
+$newuser->firstname = $user[2];
+$newuser->email = $user[3];
+
+$userdb = $DB->get_record('user',['email'=>$user[3]]);
+
+if($userdb){
+    $newuser->id = $userdb->id;
+    user_update_user($newuser);
+} else {
+    user_create_user($newuser);
+}
 ```
