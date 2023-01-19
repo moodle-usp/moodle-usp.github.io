@@ -24,27 +24,19 @@ No mustache apresentamos os dados existentes no banco de dados:
 
 ```php
 {% raw %}<table class="table">
-
     <tr>
       <td> <b>Descrição do arquivo</b></td>
       <td> <b>Tipo</b></td>
     </tr>
-
     {{#records}}
       <tr>
         <td> {{description}}</td>
         <td>
-          {{#type}}
-              Users
-          {{/type}}
-
-          {{^type}}
-            Course
-          {{/type}}
+          {{#type}} Courses {{/type}}
+          {{^type}} Users {{/type}}
         </td>
       </tr>
     {{/records}}
-
   </table>{% endraw %}
 ```
 
@@ -60,20 +52,20 @@ $PAGE->set_context(context_system::instance());
 
 $id = required_param('id', PARAM_INT);
 
-die('to aqui');
+die('tô aqui');
 ```
 
 Criando um link para nova página no mustache:
 
 ```html
-<a href="/blocks/importstuffs/createcourses.php/?id={{ id }}"> Importar no moodle </a>
+{% raw %}<a href="/blocks/importstuffs/createcourses.php/?id={{ id }}"> Importar no moodle </a>{% endraw %}
 ```
 
 Em *createcourses.php* verificando se registro existe:
 
 ```php
 $record = $DB->get_record('block_importstuffs', ['id' => $id]);
-if(!$record) {
+if(empty($record)) {
     \core\notification::error('Registro não existe');
     redirect($CFG->wwwroot . '/blocks/importstuffs/view.php');
 }
@@ -104,7 +96,7 @@ Inialmente verificar se curso não está cadastrado:
 
 ```php
 if($DB->get_record('course', ['shortname' => $course[0]])){
-    \core\notification::error($course[0] . ' já existe');
+    \core\notification::error($course[1] . ' já existe');
     continue;
 }
 ```

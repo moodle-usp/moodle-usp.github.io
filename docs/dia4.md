@@ -31,3 +31,13 @@ $newcourse->startdate = $start_time;
 $newcourse->enddate = $end_time;
 ```
 
+Link para contemplar os usuários:
+
+
+```php
+{% raw %}<td>
+    {{#type}} <a href="/blocks/importstuffs/createcourses.php/?id={{id}}"> Importar no Curso </a> {{/type}}
+    {{^type}} <a href="/blocks/importstuffs/createusers.php/?id={{id}}"> Importar no Usuários </a> {{/type}}
+</td>{% endraw %}
+```
+
