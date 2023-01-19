@@ -7,35 +7,27 @@ nav_order: 5
 {:toc}
 ---
 
-Finalizando *createcourses.php*:
+Criando o curso no moodle dentro do foreach do *createcourses.php*:
 
 ```php
-$lines = explode(PHP_EOL,$record->file);
-foreach($lines as $line){
-    $course = str_getcsv($line);
+require_once("$CFG->dirroot/course/lib.php");
 
-    if($DB->get_record('course', ['shortname' => $course[0]])){
-        \core\notification::error($course[0] . ' já existe');
-        continue;
-    }
+$newcourse = new \stdClass();
+$newcourse->shortname = $course[0];
+$newcourse->fullname = $course[1];
+$newcourse->category = 1;
 
-    $newcourse = new \stdClass();
-    $newcourse->shortname = $course[0];
-    $newcourse->fullname = $course[1];
-    $newcourse->idnumber = $course[0];
-    $newcourse->category = 1;
+$created_course = \create_course($newcourse);
+\core\notification::success($course[1] . ' cadastrado com sucesso');
+```
 
-    $start_time = strtotime($course[2]);
-    $end_time = strtotime($course[3]);
+Se quisermos especificar as data de início e fim do curso:
 
-    $newcourse->startdate = $start_time;
-    $newcourse->enddate = $end_time;
-    $newcourse->timemodified = time();
+```php
+$start_time = strtotime($course[2]);
+$end_time = strtotime($course[3]);
 
-    $created_course = \create_course($newcourse);
-    \core\notification::success($course[1] . ' cadastrado com sucesso');
-}
-
-redirect($CFG->wwwroot . '/blocks/importstuffs/view.php');
+$newcourse->startdate = $start_time;
+$newcourse->enddate = $end_time;
 ```
 

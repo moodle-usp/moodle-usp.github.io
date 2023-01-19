@@ -11,7 +11,6 @@ nav_order: 4
 
 <a href="/assets/cursos.csv">Arquivo csv com cursos. </a>
 
-
 Resgatando os dados submetidos na view.php:
 
 ```php
@@ -19,7 +18,6 @@ $data = [
 	'uploadform' => $uploadform->render(),
 	'records'    => array_values($DB->get_records('block_importstuffs'))
 ];
-
 ```
 
 No mustache apresentamos os dados existentes no banco de dados:
@@ -110,3 +108,10 @@ if($DB->get_record('course', ['shortname' => $course[0]])){
     continue;
 }
 ```
+
+No final da página vamos retornar para o formulário:
+```php
+redirect($CFG->wwwroot . '/blocks/importstuffs/view.php');
+```
+
+
