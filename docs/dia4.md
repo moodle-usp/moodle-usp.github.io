@@ -7,6 +7,8 @@ nav_order: 5
 {:toc}
 ---
 
+<a href="/assets/users.csv">Arquivo csv com usuários. </a>
+
 Criando o curso no moodle dentro do foreach do *createcourses.php*:
 
 ```php
@@ -41,3 +43,40 @@ Link para contemplar os usuários:
 </td>{% endraw %}
 ```
 
+Possível implementação do delete.php:
+
+```php
+require_once('../../config.php');
+
+global $DB;
+$id = required_param('id',PARAM_INT);
+$DB->delete_records('block_importstuffs',[ 'id' => $id ]);
+redirect($CFG->wwwroot . '/blocks/importstuffs/view.php');
+```
+
+Iniciando arquivo createusers.php
+
+```php
+require_once('../../config.php');
+require_once("$CFG->dirroot/user/lib.php");
+
+global $DB;
+
+$id = required_param('id', PARAM_INT);
+
+$record = $DB->get_record('block_importstuffs', ['id' => $id]);
+if(empty($record)) {
+    \core\notification::error('Registro não existe');
+    redirect($CFG->wwwroot . '/blocks/importstuffs/view.php');
+}
+
+
+$lines = explode(PHP_EOL,$record->file);
+foreach($lines as $line){
+    $user = str_getcsv($line);
+
+    $userdb = $DB->get_record('user',['email'=>$user[3]]);
+
+}
+redirect($CFG->wwwroot . '/blocks/importstuffs/view.php');
+```
