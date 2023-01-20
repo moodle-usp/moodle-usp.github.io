@@ -7,24 +7,40 @@ nav_order: 6
 {:toc}
 ---
 
-Não disponível
+## Atribuindo papéis:
 
-## Segurança
-
-Evitando que os scripts php sejam rodados foram do ambiente mooodle:
+Procurando o curso:
 
 ```php
-defined('MOODLE_INTERNAL') || die();
+$course = $DB->get_record('course',['shortname' => $user[0]]);
 ```
 
-<!---
-Não sei se vamos abordar?
+Jogando um erro caso curso não exista:
 
-- hooks em lib.php ?
+```php
+if(empty($course)) {
+    \core\notification::error("Não existe um curso de código $user[0]");
+    continue; 
+}
+```
 
+Instância moodle:
 
--->
-## Configurações do Plugin
+```php
+$instances = enrol_get_instances($course->id, true);
+$instance = array_values($instances)[0];
+$plugin = enrol_get_plugin('manual');
+```
+
+Atribuindo papéis:
+
+```php
+$userdb = $DB->get_record('user',['email'=>$user[3]]);
+$plugin->enrol_user($instance, $userdb->id, $course->id);
+$student = $DB->get_record('role', ["shortname" => 'student']);
+$context = context_system::instance();
+role_assign($student->id, $userdb->id, $context->id);
+```
 
 
 
