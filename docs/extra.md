@@ -34,3 +34,9 @@ Para usar o campo criado em qualquer lugar do plugin:
 ```php
 get_config('block_atpc','texto');
 ```
+
+Comando para trocar senha:
+
+```bash
+php admin/cli/reset_password.php
+```
