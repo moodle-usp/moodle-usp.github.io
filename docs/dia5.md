@@ -35,11 +35,14 @@ $plugin = enrol_get_plugin('manual');
 Atribuindo papéis:
 
 ```php
+// TODO fazer uma consulta na tabela role para pegar o $role
 $userdb = $DB->get_record('user',['email'=>$user[3]]);
-$plugin->enrol_user($instance, $userdb->id, $course->id);
-$student = $DB->get_record('role', ["shortname" => 'student']);
-$context = context_system::instance();
-role_assign($student->id, $userdb->id, $context->id);
+$student_role = $DB->get_record('role', ["shortname" => 'student']);
+$plugin->enrol_user($instance, $userdb->id, $student_role->id);
+
+// Não é necessário
+//$context = context_system::instance();
+//role_assign($student->id, $userdb->id, $context->id);
 ```
 
 
