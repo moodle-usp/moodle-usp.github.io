@@ -14,10 +14,21 @@ Criando o curso no moodle dentro do foreach do *createcourses.php*:
 ```php
 require_once("$CFG->dirroot/course/lib.php");
 
+$category = $DB->get_record('course_categories', array('name'=>'Categoria de Cursos'));
+if($category) return $category;
+
+$parentid = 0;
+$newcategory = new \stdClass();
+$newcategory->name = 'Categoria de Cursos';
+$newcategory->description = 'descrição';
+$newcategory->sortorder = 999;
+$newcategory->parent = $parentid;
+$newcategory->save();
+
 $newcourse = new \stdClass();
 $newcourse->shortname = $course[0];
 $newcourse->fullname = $course[1];
-$newcourse->category = 1;
+$newcourse->category = $newcategory->id;
 
 $created_course = \create_course($newcourse);
 \core\notification::success($course[1] . ' cadastrado com sucesso');
